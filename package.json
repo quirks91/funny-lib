@@ -1,0 +1,23 @@
+{
+  "name": "krlib",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest",
+    "preminify": "mkdirp dist",
+    "minify": "terser src/index.js -o dist/index.min.js"
+  },
+  "files": [
+    "/dist",
+    "/README.md"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.6.4",
+    "mkdirp": "^3.0.1",
+    "terser": "^5.19.4"
+  }
+}
