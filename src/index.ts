@@ -1,8 +1,9 @@
 /**
- * @param {number} num - 콤마를 추가할 넘버
- * @returns {string} - 콤마가 추가된 문자열
+ * 콤마를 추가할 넘버
+ * @param num - 콤마를 추가할 넘버
+ * @returns 콤마가 추가된 문자열
  */
-function addCommas(num) {
+function addCommas(num: number): string {
   if (arguments.length !== 1) {
     throw new Error("This function accepts exactly one argument");
   }
@@ -22,7 +23,12 @@ function addCommas(num) {
   return parts.join(".");
 }
 
-function removeCommas(str) {
+/**
+ * 콤마가 제거된 문자열
+ * @param str - 콤마가 포함된 문자열
+ * @returns 콤마가 제거된 문자열
+ */
+function removeCommas(str: string): string {
   if (arguments.length !== 1) {
     throw new Error("This function accepts exactly one argument");
   }
@@ -34,7 +40,12 @@ function removeCommas(str) {
   return str.replace(/,/g, "");
 }
 
-function validateMobileNumber(phoneNumber) {
+/**
+ * 전화번호 유효성 검사 및 하이픈 제거
+ * @param phoneNumber - 전화번호 문자열 (하이픈 포함)
+ * @returns 하이픈이 제거된 숫자로만 구성된 전화번호 문자열
+ */
+function validateMobileNumber(phoneNumber: string): string {
   // 입력값이 문자열인지 확인
   if (typeof phoneNumber !== "string") {
     throw new Error("Input must be a string");
@@ -60,7 +71,12 @@ function validateMobileNumber(phoneNumber) {
   return strippedNumber;
 }
 
-function formatMobileNumber(phoneNumber) {
+/**
+ * 전화번호 형식을 정규적인 형태로 변환
+ * @param phoneNumber - 전화번호 문자열 (하이픈 포함)
+ * @returns 정규적인 형식으로 변환된 전화번호 문자열
+ */
+function formatMobileNumber(phoneNumber: string): string {
   if (typeof phoneNumber !== "string") {
     throw new Error("Input must be a string");
   }
@@ -93,7 +109,12 @@ function formatMobileNumber(phoneNumber) {
   return formattedNumber;
 }
 
-function validateTelNumber(tel) {
+/**
+ * 일반전화 유효성 검사 및 하이픈 제거
+ * @param tel - 일반전화 번호 (하이픈 포함)
+ * @returns 하이픈이 제거된 숫자로만 구성된 일반전화 번호
+ */
+function validateTelNumber(tel: string): string {
   // 입력값이 문자열인지 확인
   if (typeof tel !== "string") {
     throw new Error("Input must be a string");
@@ -126,7 +147,16 @@ function validateTelNumber(tel) {
   return strippedNumber;
 }
 
-function formatTelNumber(tel) {
+/**
+ * 일반전화 번호 형식을 정규적인 형태로 변환
+ * 02-123-4567, 031-1234-5678 등의 서울 및 그 외 지역 번호를 표준 형식으로 변환합니다.
+ * 02와 010으로 시작하는 경우에 한정하여 처리합니다.
+ * 다른 규칙의 일반전화 번호는 예외 처리됩니다.
+ *
+ * @param tel - 일반전화 번호 (하이픈 포함)
+ * @returns 정규적인 형식으로 변환된 일반전화 번호
+ */
+function formatTelNumber(tel: string): string {
   if (typeof tel !== "string") {
     throw new Error("Input must be a string");
   }
@@ -174,12 +204,37 @@ function formatTelNumber(tel) {
 }
 
 /**
- * 아이디별 분류
- * @param {*} objectArray - 배열 데이터
- * @param {string} property - 아이디별 분류
- * @returns {id:[], id: []}
+ * 객체 배열을 아이디별로 분류하여 반환합니다.
+ *
+ * 주어진 객체 배열에서 특정 속성값(property)을 기준으로 객체들을 그룹핑하여 반환합니다.
+ *
+ *
+ *@example 예시:
+ *
+ const arr = [
+   { id: 'A', name: 'Apple' },
+   { id: 'B', name: 'Banana' },
+   { id: 'A', name: 'Avocado' },
+   { id:'C', name:'Cherry'}
+ ];
+ const grouped = groupArrByKey(arr, 'id');
+ console.log(grouped);
+ // Output:
+ {
+    A:[{id:'A',name:'Apple'},{id:'A',name:'Avocado'}],
+    B:[{id:'B',name:'Banana'}],
+    C:[{id:'C',name:'Cherry'}]
+ }
+ *
+ *@param objectArray 배열 데이터
+ *@property property 아아디별 분류할 속성 이름입니다. 이 속성은 각 개체에 있어야 합니다.
+ *@return 각 아아디별로 분류 된 객체 배열입니다. 결과는 개체의 속성 값(property)을 키(key)로 사용하여 맵(Map)처럼 구현됩니다.  
  */
-function groupArrByKey(objectArray, property) {
+type ObjectType = Record<string, any>;
+function groupArrByKey<T extends ObjectType, K extends keyof T>(
+  objectArray: T[],
+  property: K
+): Record<T[K], T[]> {
   if (!Array.isArray(objectArray)) {
     throw new Error("not array");
   }
@@ -188,7 +243,7 @@ function groupArrByKey(objectArray, property) {
     throw new Error("empty array");
   }
 
-  return objectArray.reduce(function (acc, obj) {
+  return objectArray.reduce(function (acc: Record<T[K], T[]>, obj: T) {
     if (!obj.hasOwnProperty(property)) {
       throw new Error("missing key");
     }
@@ -199,21 +254,26 @@ function groupArrByKey(objectArray, property) {
     }
     acc[key].push(obj);
     return acc;
-  }, {});
+  }, {} as Record<T[K], T[]>);
 }
 
 /**
- * @param {*} obj 
- * @returns 
- */
-function isEmptyObject(obj) {
+* @notice 비어있는지 여부 확인, 객체가 비어있다면 true를 반환하고, 그렇지 않으면 false를 반환합니다.
+* 
+* @example console.log(isEmptyObject({})); // Output : true
+* console.log(isEmptyObject({ a :1 })); // Output : false
+* console.log(isEmptyObject(new Date())); // Output : false
+* console.log(isEmptyObject([])); // Output : false
+*@param obj 확인할 객체입니다.
+*@return 주어진 객체가 비어있다면 true, 그렇지 않으면 false입니다. 
+*/
+function isEmptyObject(obj: any): boolean {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
-
 /********** 내부 함수 **********/
 
-module.exports = {
+export {
   addCommas,
   removeCommas,
   validateMobileNumber,
@@ -221,5 +281,5 @@ module.exports = {
   validateTelNumber,
   formatTelNumber,
   groupArrByKey,
-  isEmptyObject,
+  isEmptyObject
 };

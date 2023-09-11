@@ -1,12 +1,15 @@
 {
-  "name": "krlib",
-  "version": "0.1.0",
+  "name": "funny-utils",
+  "version": "0.3.1",
   "description": "",
-  "main": "src/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "test": "jest",
     "preminify": "mkdirp dist",
-    "minify": "terser src/index.js -o dist/index.min.js"
+    "compile": "tsc",
+    "minify": "terser ./dist/index.js -o ./dist/index.min.js",
+    "build": "npm run compile && npm run minify"
   },
   "files": [
     "/dist",
@@ -18,6 +21,7 @@
   "devDependencies": {
     "jest": "^29.6.4",
     "mkdirp": "^3.0.1",
-    "terser": "^5.19.4"
+    "terser": "^5.19.4",
+    "typescript": "^5.2.2"
   }
 }
