@@ -1,4 +1,4 @@
-const {
+import {
   addCommas,
   removeCommas,
   validateMobileNumber,
@@ -6,8 +6,8 @@ const {
   validateTelNumber,
   formatTelNumber,
   groupArrByKey,
-  isEmptyObject
-} = require("./index");
+  isEmptyObject,
+} from "./index";
 
 test("adds commas to numbers", () => {
   expect(addCommas(1000)).toBe("1,000");
@@ -15,6 +15,7 @@ test("adds commas to numbers", () => {
   expect(addCommas(500)).toBe("500"); // No comma needed.
 
   // Additional test cases
+  expect(() => addCommas()).toThrow();
   expect(() => addCommas("string")).toThrow();
   expect(addCommas(1234.5678)).toBe("1,234.5678");
   expect(addCommas(-1234)).toBe("-1,234");
@@ -117,12 +118,12 @@ test("group array by key", () => {
   expect(() => groupArrByKey(arr1, "tes")).toThrow("missing key");
 });
 
-test('checks if an object is empty', () => {
+test("checks if an object is empty", () => {
   expect(isEmptyObject({})).toBe(true);
 
-  expect(isEmptyObject('str')).toBe(false);
+  expect(isEmptyObject("str")).toBe(false);
   expect(isEmptyObject(1234)).toBe(false);
-  expect(isEmptyObject({a: 1})).toBe(false);
+  expect(isEmptyObject({ a: 1 })).toBe(false);
   expect(isEmptyObject(new Date())).toBe(false);
   expect(isEmptyObject([])).toBe(false);
 });
