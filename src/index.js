@@ -202,6 +202,15 @@ function groupArrByKey(objectArray, property) {
   }, {});
 }
 
+/**
+ * @param {*} obj 
+ * @returns 
+ */
+function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+
 /********** 내부 함수 **********/
 
 module.exports = {
@@ -212,4 +221,5 @@ module.exports = {
   validateTelNumber,
   formatTelNumber,
   groupArrByKey,
+  isEmptyObject,
 };

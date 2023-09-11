@@ -6,6 +6,7 @@ const {
   validateTelNumber,
   formatTelNumber,
   groupArrByKey,
+  isEmptyObject
 } = require("./index");
 
 test("adds commas to numbers", () => {
@@ -42,8 +43,8 @@ test("validate mobile number", () => {
 
 test("format mobile number", () => {
   expect(formatMobileNumber("01094251234")).toBe("010-9425-1234");
+  expect(formatMobileNumber("010-9425-1424")).toBe("010-9425-1424");
   expect(formatMobileNumber("0104251234")).toBe("010-425-1234");
-  expect(formatMobileNumber("0109251234")).toBe("010-925-1234");
 
   expect(() => formatMobileNumber(1094220525)).toThrow();
   expect(() => formatMobileNumber("010-$492-5922")).toThrow();
@@ -56,6 +57,8 @@ test("validate tel number", () => {
   expect(validateTelNumber("02-133-4920")).toBe("021334920");
   expect(validateTelNumber("042-1334-4920")).toBe("04213344920");
   expect(validateTelNumber("042-334-4920")).toBe("0423344920");
+  expect(validateTelNumber("0423344920")).toBe("0423344920");
+  expect(validateTelNumber("010-9482-1234")).toBe("01094821234");
 
   expect(() => validateTelNumber(1094220525)).toThrow();
   expect(() => validateTelNumber("010-$492-5922")).toThrow();
@@ -112,4 +115,14 @@ test("group array by key", () => {
   expect(() => groupArrByKey([], "id")).toThrow("empty array");
   expect(() => groupArrByKey({}, "id")).toThrow("not array");
   expect(() => groupArrByKey(arr1, "tes")).toThrow("missing key");
+});
+
+test('checks if an object is empty', () => {
+  expect(isEmptyObject({})).toBe(true);
+
+  expect(isEmptyObject('str')).toBe(false);
+  expect(isEmptyObject(1234)).toBe(false);
+  expect(isEmptyObject({a: 1})).toBe(false);
+  expect(isEmptyObject(new Date())).toBe(false);
+  expect(isEmptyObject([])).toBe(false);
 });
