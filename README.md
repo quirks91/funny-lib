@@ -6,7 +6,8 @@
 5. [formatMobileNumber](#formatmobilenumber)
 6. [validateTelNumber](#validatetelnumber)
 7. [formatTelNumber](#formattelnumber)
-7. [isEmptyObject](#isemptyobject)
+8. [isEmptyObject](#isemptyobject)
+9. [throttle](#throttle)
 ---
 
 ### groupArrByKey
@@ -121,7 +122,6 @@ formatTelNumber('0104-29421-1234'); // throw error
 ```
 
 ---
-
 ### isEmptyObject
 
 일반 전화번호에 하이픈을 추가해줍니다.
@@ -136,4 +136,14 @@ isEmptyObject(1234);  //  flase
 isEmptyObject({a:1});   // flase
 isEmptyObject(new Date()); //  flase
 isEmptyObject(['0104-29421-1234']); // flase
+```
+
+---
+### throttle
+여러번 발생하는 이벤트를 일정 시간 동안, 한번만 실행 되도록 만듭니다.
+
+```jsx
+function throttle(callback, limit);
+
+throttle(callback, 300)
 ```

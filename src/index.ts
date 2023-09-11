@@ -1,20 +1,53 @@
+/********** 내부 함수 **********/
+class Validate {
+  constructor() {}
+  isNumber(value: any) {
+    if (typeof value !== "number" || isNaN(value)) {
+      throw new Error("Input must be a number");
+    }
+    return true;
+  }
+  isString(value: any) {
+    if (typeof value !== "string") {
+      throw new Error("Input must be a string");
+    }
+    return true;
+  }
+  isArray(value: any) {
+    if (!Array.isArray(value)) {
+      throw new Error("not array");
+    }
+    return true;
+  }
+  isFinite(value: any) {
+    if (!isFinite(value)) {
+      throw new Error("Input must be a finite number");
+    }
+    return true;
+  }
+  isValidateOneArgument(value: any) {
+    if (value.length !== 1) {
+      throw new Error("This function accepts exactly one argument");
+    }
+  }
+  isValidateOnlyNumber(value: any) {
+    if (!/^\d+$/.test(value)) {
+      throw new Error("tel number should only contain digits");
+    }
+  }
+}
+const valid = new Validate();
+/********** 내부 함수 **********/
+
 /**
  * 콤마를 추가할 넘버
  * @param num - 콤마를 추가할 넘버
  * @returns 콤마가 추가된 문자열
  */
 function addCommas(num: number): string {
-  if (arguments.length !== 1) {
-    throw new Error("This function accepts exactly one argument");
-  }
-
-  if (typeof num !== "number" || isNaN(num)) {
-    throw new Error("Input must be a number");
-  }
-
-  if (!isFinite(num)) {
-    throw new Error("Input must be a finite number");
-  }
+  valid.isValidateOneArgument(arguments);
+  valid.isNumber(num);
+  valid.isFinite(num);
 
   const parts = num.toString().split(".");
 
@@ -29,37 +62,24 @@ function addCommas(num: number): string {
  * @returns 콤마가 제거된 문자열
  */
 function removeCommas(str: string): string {
-  if (arguments.length !== 1) {
-    throw new Error("This function accepts exactly one argument");
-  }
-
-  if (typeof str !== "string") {
-    throw new Error("Input must be a string");
-  }
+  valid.isValidateOneArgument(arguments);
+  valid.isString(str);
 
   return str.replace(/,/g, "");
 }
 
 /**
- * 전화번호 유효성 검사 및 하이픈 제거
+ * @notice 전화번호 유효성 검사 및 하이픈 제거
  * @param phoneNumber - 전화번호 문자열 (하이픈 포함)
  * @returns 하이픈이 제거된 숫자로만 구성된 전화번호 문자열
  */
 function validateMobileNumber(phoneNumber: string): string {
-  // 입력값이 문자열인지 확인
-  if (typeof phoneNumber !== "string") {
-    throw new Error("Input must be a string");
-  }
+  valid.isString(phoneNumber);
 
-  // 모든 하이픈 제거
   const strippedNumber = phoneNumber.replace(/-/g, "");
 
-  // 숫자만 포함되어 있는지 확인
-  if (!/^\d+$/.test(strippedNumber)) {
-    throw new Error("Phone number should only contain digits");
-  }
+  valid.isValidateOnlyNumber(strippedNumber);
 
-  // 길이가 맞는지 확인 (010 + 중간자리(3~4자리) + 끝자리(4자리))
   if (
     strippedNumber.length < 10 ||
     strippedNumber.length > 11 ||
@@ -72,21 +92,18 @@ function validateMobileNumber(phoneNumber: string): string {
 }
 
 /**
- * 전화번호 형식을 정규적인 형태로 변환
+ * @notice 전화번호 형식을 정규적인 형태로 변환
  * @param phoneNumber - 전화번호 문자열 (하이픈 포함)
  * @returns 정규적인 형식으로 변환된 전화번호 문자열
  */
 function formatMobileNumber(phoneNumber: string): string {
-  if (typeof phoneNumber !== "string") {
-    throw new Error("Input must be a string");
-  }
+
+  valid.isString(phoneNumber);
 
   // 모든 하이픈 제거
   const strippedNumber = phoneNumber.replace(/-/g, "");
 
-  if (!/^\d+$/.test(strippedNumber)) {
-    throw new Error("Phone number should only contain digits");
-  }
+  valid.isValidateOnlyNumber(strippedNumber);
 
   let formattedNumber;
 
@@ -110,23 +127,17 @@ function formatMobileNumber(phoneNumber: string): string {
 }
 
 /**
- * 일반전화 유효성 검사 및 하이픈 제거
+ * @notice 일반전화 유효성 검사 및 하이픈 제거
  * @param tel - 일반전화 번호 (하이픈 포함)
  * @returns 하이픈이 제거된 숫자로만 구성된 일반전화 번호
  */
 function validateTelNumber(tel: string): string {
-  // 입력값이 문자열인지 확인
-  if (typeof tel !== "string") {
-    throw new Error("Input must be a string");
-  }
+  valid.isString(tel);
 
   // 모든 하이픈 제거
   const strippedNumber = tel.replace(/-/g, "");
 
-  // 숫자만 포함되어 있는지 확인
-  if (!/^\d+$/.test(strippedNumber)) {
-    throw new Error("Phone number should only contain digits");
-  }
+  valid.isValidateOnlyNumber(strippedNumber);
 
   // 길이와 앞 세 자리를 기준으로 포맷 확인
   const len = strippedNumber.length;
@@ -148,7 +159,7 @@ function validateTelNumber(tel: string): string {
 }
 
 /**
- * 일반전화 번호 형식을 정규적인 형태로 변환
+ * @notice 일반전화 번호 형식을 정규적인 형태로 변환
  * 02-123-4567, 031-1234-5678 등의 서울 및 그 외 지역 번호를 표준 형식으로 변환합니다.
  * 02와 010으로 시작하는 경우에 한정하여 처리합니다.
  * 다른 규칙의 일반전화 번호는 예외 처리됩니다.
@@ -157,42 +168,39 @@ function validateTelNumber(tel: string): string {
  * @returns 정규적인 형식으로 변환된 일반전화 번호
  */
 function formatTelNumber(tel: string): string {
-  if (typeof tel !== "string") {
-    throw new Error("Input must be a string");
-  }
+  valid.isString(tel);
+
   // 모든 하이픈 제거
-  const stripped_number = tel.replace(/-/g, "");
+  const strippedNumber = tel.replace(/-/g, "");
 
-  if (!/^\d+$/.test(stripped_number)) {
-    throw new Error("tel number should only contain digits");
-  }
+  valid.isValidateOnlyNumber(strippedNumber);
 
-  let formatted_number;
+  let formattedNumber;
 
-  if (stripped_number.length === 9 && stripped_number.startsWith("02")) {
+  if (strippedNumber.length === 9 && strippedNumber.startsWith("02")) {
     // 서울 지역 번호 체크
-    formatted_number = stripped_number.replace(
+    formattedNumber = strippedNumber.replace(
       /(\d{2})(\d{3})(\d{4})/,
       "$1-$2-$3"
     );
   } else if (
-    stripped_number.length === 10 &&
-    stripped_number.startsWith("02")
+    strippedNumber.length === 10 &&
+    strippedNumber.startsWith("02")
   ) {
     // 서울 지역 번호 체크
-    formatted_number = stripped_number.replace(
+    formattedNumber = strippedNumber.replace(
       /(\d{2})(\d{4})(\d{4})$/,
       "$1-$2-$3"
     );
-  } else if (stripped_number.length === 10) {
+  } else if (strippedNumber.length === 10) {
     // 그 외 지역 번호 체크
-    formatted_number = stripped_number.replace(
+    formattedNumber = strippedNumber.replace(
       /(\d{3})(\d{3})(\d{4})$/,
       "$1-$2-$3"
     );
-  } else if (stripped_number.length === 11) {
+  } else if (strippedNumber.length === 11) {
     // 그 외 지역 번호 체크
-    formatted_number = stripped_number.replace(
+    formattedNumber = strippedNumber.replace(
       /(\d{3})(\d{4})(\d{4})$/,
       "$1-$2-$3"
     );
@@ -200,16 +208,17 @@ function formatTelNumber(tel: string): string {
     throw new Error("Invalid tel number format");
   }
 
-  return formatted_number;
+  return formattedNumber;
 }
 
+type ObjectType = Record<string, any>;
 /**
  * 객체 배열을 아이디별로 분류하여 반환합니다.
  *
  * 주어진 객체 배열에서 특정 속성값(property)을 기준으로 객체들을 그룹핑하여 반환합니다.
  *
  *
- *@example 예시:
+ *@example
  *
  const arr = [
    { id: 'A', name: 'Apple' },
@@ -230,14 +239,12 @@ function formatTelNumber(tel: string): string {
  *@property property 아아디별 분류할 속성 이름입니다. 이 속성은 각 개체에 있어야 합니다.
  *@return 각 아아디별로 분류 된 객체 배열입니다. 결과는 개체의 속성 값(property)을 키(key)로 사용하여 맵(Map)처럼 구현됩니다.  
  */
-type ObjectType = Record<string, any>;
 function groupArrByKey<T extends ObjectType, K extends keyof T>(
   objectArray: T[],
   property: K
 ): Record<T[K], T[]> {
-  if (!Array.isArray(objectArray)) {
-    throw new Error("not array");
-  }
+  
+  valid.isArray(objectArray);
 
   if (objectArray.length === 0) {
     throw new Error("empty array");
@@ -258,20 +265,37 @@ function groupArrByKey<T extends ObjectType, K extends keyof T>(
 }
 
 /**
-* @notice 비어있는지 여부 확인, 객체가 비어있다면 true를 반환하고, 그렇지 않으면 false를 반환합니다.
-* 
-* @example console.log(isEmptyObject({})); // Output : true
-* console.log(isEmptyObject({ a :1 })); // Output : false
-* console.log(isEmptyObject(new Date())); // Output : false
-* console.log(isEmptyObject([])); // Output : false
-*@param obj 확인할 객체입니다.
-*@return 주어진 객체가 비어있다면 true, 그렇지 않으면 false입니다. 
-*/
+ * @notice 비어있는지 여부 확인, 객체가 비어있다면 true를 반환하고, 그렇지 않으면 false를 반환합니다.
+ * @example isEmptyObject({});           // Output : true
+ * isEmptyObject({ a :1 });     // Output : false
+ * isEmptyObject(new Date());   // Output : false
+ * isEmptyObject([]);           // Output : false
+ *@param obj 확인할 객체입니다.
+ *@return 주어진 객체가 비어있다면 true, 그렇지 않으면 false입니다.
+ */
 function isEmptyObject(obj: any): boolean {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
-/********** 내부 함수 **********/
+// throttle.ts
+function throttle<T extends any[]>(
+  func: (...params: T) => void,
+  timeout: number
+) {
+  valid.isNumber(timeout);
+
+  let wait = false;
+  return (...args: any) => {
+    if (wait) {
+      return;
+    }
+    setTimeout(() => {
+      wait = false;
+    }, timeout);
+    wait = true;
+    func(...args);
+  };
+}
 
 export {
   addCommas,
@@ -281,5 +305,6 @@ export {
   validateTelNumber,
   formatTelNumber,
   groupArrByKey,
-  isEmptyObject
+  isEmptyObject,
+  throttle,
 };

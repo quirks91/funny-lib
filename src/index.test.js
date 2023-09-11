@@ -7,6 +7,7 @@ import {
   formatTelNumber,
   groupArrByKey,
   isEmptyObject,
+  throttle,
 } from "./index";
 
 test("adds commas to numbers", () => {
@@ -126,4 +127,27 @@ test("checks if an object is empty", () => {
   expect(isEmptyObject({ a: 1 })).toBe(false);
   expect(isEmptyObject(new Date())).toBe(false);
   expect(isEmptyObject([])).toBe(false);
+});
+
+
+test("throttled", () => {
+  jest.useFakeTimers(); 
+  const callback = jest.fn(); 
+
+  const limit = 1000;
+  
+  const throttledFunction = throttle(callback, limit); 
+
+  throttledFunction();
+
+  for (let i = 0; i < 100; i++) {
+    throttledFunction();
+    jest.advanceTimersByTime(50);
+  }
+
+  expect(callback).toBeCalledTimes(5);
+
+  expect(() => throttle(callback, '300')).toThrow()
+  expect(() => throttle(callback, [])).toThrow()
+  expect(() => throttle(callback, {})).toThrow()
 });
