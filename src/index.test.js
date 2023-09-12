@@ -8,12 +8,14 @@ import {
   groupArrByKey,
   isEmptyObject,
   throttle,
+  removeHyphen,
 } from "./index";
 
 test("adds commas to numbers", () => {
   expect(addCommas(1000)).toBe("1,000");
   expect(addCommas(1000000)).toBe("1,000,000");
   expect(addCommas(500)).toBe("500"); // No comma needed.
+  expect(addCommas(-1500)).toBe("-1,500"); // No comma needed.
 
   // Additional test cases
   expect(() => addCommas()).toThrow();
@@ -32,6 +34,15 @@ test("remove commas", () => {
 
   expect(() => removeCommas(1000)).toThrow();
   expect(() => removeCommas("1000", "300")).toThrow();
+});
+
+test("remove hyphen", () => {
+  expect(removeHyphen("1-392-492-1902")).toBe("13924921902");
+  expect(removeHyphen("1-000-000")).toBe("1000000");
+  expect(removeHyphen("-1-00-00")).toBe("10000");
+
+  expect(() => removeHyphen(1000)).toThrow();
+  expect(() => removeHyphen("1000", "300")).toThrow();
 });
 
 test("validate mobile number", () => {
